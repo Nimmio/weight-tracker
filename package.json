@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "vinxi dev",
     "build": "vinxi build",
-    "start": "vinxi start",
+    "start": "prisma generate && vinxi start",
     "ts": "tsc --noEmit --incremental",
     "postinstall": "prisma generate && prisma db push"
   },

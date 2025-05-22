@@ -33,6 +33,10 @@ const config: runtime.GetPrismaClientConfig = {
         "fromEnvVar": null,
         "value": "debian-openssl-1.1.x",
         "native": true
+      },
+      {
+        "fromEnvVar": null,
+        "value": "debian-openssl-3.0.x"
       }
     ],
     "previewFeatures": [],
@@ -46,6 +50,7 @@ const config: runtime.GetPrismaClientConfig = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
@@ -54,8 +59,8 @@ const config: runtime.GetPrismaClientConfig = {
       }
     }
   },
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = \"prisma-client\"\n  output   = \"../app/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel Weighing {\n  id        Int      @id @default(autoincrement())\n  createdAt DateTime @default(now()) @db.Timestamp(6)\n  date      DateTime @default(now()) @db.Timestamp(6)\n  weight    Int\n  notes     String?\n}\n\nmodel Goal {\n  id        Int      @id @default(autoincrement())\n  createdAt DateTime @default(now()) @db.Timestamp(6)\n  weight    Int\n}\n",
-  "inlineSchemaHash": "4952947a06d361836a30c23bdef81d557258dd2491787897aeb91c83ff525d6a",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider      = \"prisma-client\"\n  output        = \"../app/generated/prisma\"\n  binaryTargets = [\"native\", \"debian-openssl-3.0.x\"]\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel Weighing {\n  id        Int      @id @default(autoincrement())\n  createdAt DateTime @default(now()) @db.Timestamp(6)\n  date      DateTime @default(now()) @db.Timestamp(6)\n  weight    Int\n  notes     String?\n}\n\nmodel Goal {\n  id        Int      @id @default(autoincrement())\n  createdAt DateTime @default(now()) @db.Timestamp(6)\n  weight    Int\n}\n",
+  "inlineSchemaHash": "de3f0b230077a1ba90b8b5b788c249df954179b35745707035077b76afc247e7",
   "copyEngine": true,
   "runtimeDataModel": {
     "models": {},
