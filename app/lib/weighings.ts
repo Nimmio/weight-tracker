@@ -21,7 +21,7 @@ export const fetchWeighing = createServerFn({ method: "GET" })
   .validator((d: number) => d)
   .handler(async ({ data }) => {
     const prisma = new PrismaClient();
-    return await prisma.weighing.findFirstOrThrow({
+    return await prisma.weighing.findFirst({
       where: {
         id: data,
       },
@@ -37,7 +37,7 @@ export const weighingQueryOptions = (weighingId: number) =>
 const fetchCurrentWeight = createServerFn({ method: "GET" }).handler(
   async () => {
     const prisma = new PrismaClient();
-    return await prisma.weighing.findFirstOrThrow({
+    return await prisma.weighing.findFirst({
       orderBy: { date: "desc" },
     });
   }
@@ -50,7 +50,6 @@ const fetchCurrentWeightChange = createServerFn({ method: "GET" }).handler(
       orderBy: { date: "desc" },
       take: 2,
     });
-    console.log("weighings.length", weighings.length > 1);
     if (weighings.length <= 1) return 0;
     const diffenrenz = weighings[0].weight - weighings[1].weight;
     return diffenrenz >= 0 ? `+${diffenrenz}` : diffenrenz.toString();
@@ -60,7 +59,7 @@ const fetchCurrentWeightChange = createServerFn({ method: "GET" }).handler(
 const fetchStartingWeight = createServerFn({ method: "GET" }).handler(
   async () => {
     const prisma = new PrismaClient();
-    return await prisma.weighing.findFirstOrThrow({
+    return await prisma.weighing.findFirst({
       orderBy: { date: "asc" },
     });
   }
@@ -70,9 +69,9 @@ export const fetchDashboardData = createServerFn({ method: "GET" }).handler(
   async () => {
     const [currentWeight, currentWeightChange, startingWeight] =
       await Promise.all([
-        (await fetchCurrentWeight()).weight,
+        (await fetchCurrentWeight())?.weight || 0,
         fetchCurrentWeightChange(),
-        (await fetchStartingWeight()).weight,
+        (await fetchStartingWeight())?.weight || 0,
       ]);
     const startingWeightChange = currentWeight - startingWeight;
 
@@ -122,14 +121,14 @@ export const deleteWeighing = createServerFn({ method: "POST" })
 
 const fetchGoalWeight = createServerFn({ method: "GET" }).handler(async () => {
   const prisma = new PrismaClient();
-  return await prisma.goal.findFirstOrThrow();
+  return await prisma.goal.findFirst();
 });
 
 export const fetchGoalData = createServerFn({ method: "GET" }).handler(
   async () => {
     const [goalWeight, currentWeight] = await Promise.all([
-      (await fetchGoalWeight()).weight,
-      (await fetchCurrentWeight()).weight,
+      (await fetchGoalWeight())?.weight || 0,
+      (await fetchCurrentWeight())?.weight || 0,
     ]);
     const toGo = currentWeight - goalWeight;
     return {

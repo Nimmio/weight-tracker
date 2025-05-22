@@ -91,7 +91,7 @@ export function WeightForm() {
               <Calendar
                 mode="single"
                 selected={date}
-                onSelect={setDate}
+                onSelect={(newDate: Date) => setDate(newDate)}
                 initialFocus
               />
             </PopoverContent>

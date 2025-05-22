@@ -12,7 +12,6 @@ import { WeightForm } from "../form/form";
 import {
   fetchDashboardData,
   fetchGoalData,
-  fetchGoalWeight,
   updateGoalWeight,
 } from "@/lib/weighings";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
