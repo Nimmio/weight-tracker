@@ -1,0 +1,9 @@
+-- CreateTable
+CREATE TABLE "Weighing" (
+    "id" SERIAL NOT NULL,
+    "createdAt" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "date" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "weight" INTEGER NOT NULL,
+
+    CONSTRAINT "Weighing_pkey" PRIMARY KEY ("id")
+);
