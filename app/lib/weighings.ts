@@ -3,10 +3,10 @@ import { queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import { create } from "node:domain";
 import { z } from "zod";
+import prisma from "./prisma";
 
 export const fetchWeighings = createServerFn({ method: "GET" }).handler(
   async () => {
-    const prisma = new PrismaClient();
     return await prisma.weighing.findMany({ orderBy: { date: "asc" } });
   }
 );
@@ -20,7 +20,6 @@ export const weighingsQueryOptions = () =>
 export const fetchWeighing = createServerFn({ method: "GET" })
   .validator((d: number) => d)
   .handler(async ({ data }) => {
-    const prisma = new PrismaClient();
     return await prisma.weighing.findFirst({
       where: {
         id: data,
@@ -36,7 +35,6 @@ export const weighingQueryOptions = (weighingId: number) =>
 
 const fetchCurrentWeight = createServerFn({ method: "GET" }).handler(
   async () => {
-    const prisma = new PrismaClient();
     return await prisma.weighing.findFirst({
       orderBy: { date: "desc" },
     });
@@ -45,7 +43,6 @@ const fetchCurrentWeight = createServerFn({ method: "GET" }).handler(
 
 const fetchCurrentWeightChange = createServerFn({ method: "GET" }).handler(
   async () => {
-    const prisma = new PrismaClient();
     const weighings = await prisma.weighing.findMany({
       orderBy: { date: "desc" },
       take: 2,
@@ -58,7 +55,6 @@ const fetchCurrentWeightChange = createServerFn({ method: "GET" }).handler(
 
 const fetchStartingWeight = createServerFn({ method: "GET" }).handler(
   async () => {
-    const prisma = new PrismaClient();
     return await prisma.weighing.findFirst({
       orderBy: { date: "asc" },
     });
@@ -98,7 +94,6 @@ export const addWeighing = createServerFn({ method: "POST" })
     return Weighing.parse(weighing);
   })
   .handler(async (ctx) => {
-    const prisma = new PrismaClient();
     return await prisma.weighing.create({
       data: {
         ...ctx.data,
@@ -111,7 +106,6 @@ export const deleteWeighing = createServerFn({ method: "POST" })
     return z.object({ id: z.number() }).parse(id);
   })
   .handler(async (ctx) => {
-    const prisma = new PrismaClient();
     return await prisma.weighing.delete({
       where: {
         id: ctx.data.id,
@@ -120,7 +114,6 @@ export const deleteWeighing = createServerFn({ method: "POST" })
   });
 
 const fetchGoalWeight = createServerFn({ method: "GET" }).handler(async () => {
-  const prisma = new PrismaClient();
   return await prisma.goal.findFirst();
 });
 
@@ -143,7 +136,6 @@ export const updateGoalWeight = createServerFn({ method: "POST" })
     return z.object({ weight: z.number().gt(0) }).parse(weight);
   })
   .handler(async (ctx) => {
-    const prisma = new PrismaClient();
     return await prisma.goal.upsert({
       create: {
         id: 1,
