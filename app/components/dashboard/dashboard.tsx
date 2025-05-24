@@ -16,7 +16,6 @@ import {
 } from "@/lib/weighings";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { WeightTable } from "../history/history";
-import { Skeleton } from "../ui/skeleton";
 import StatsCard from "../dashboardStatsCard/dashboardStatsCard";
 import { useState } from "react";
 import { EditGoalWeightDialog } from "../editGoalDialog/editGoalDialog";

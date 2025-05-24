@@ -33,19 +33,44 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useState } from "react";
-import { deleteWeighing, fetchAllWeighings } from "@/lib/weighings";
+import { deleteWeighing, fetchWeighingsForHistory } from "@/lib/weighings";
 import { ReactNode } from "@tanstack/react-router";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
 export function WeightTable() {
   const [entryToDelete, setEntryToDelete] = useState(null);
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+  const [sorting, setSorting] = useState([
+    {
+      id: "date",
+      desc: true,
+    },
+  ]);
+
+  const handlePageSizeChange = (newPageSize: string) => {
+    setPagination({
+      pageIndex: 0,
+      pageSize: +newPageSize,
+    });
+  };
 
   const {
-    data = [],
+    data = { entries: [], pages: 0 },
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["weighings"],
-    queryFn: fetchAllWeighings,
+    queryKey: ["weighings", { sorting, pagination }],
+    queryFn: () =>
+      fetchWeighingsForHistory({ data: { sort: sorting, pagination } }),
   });
 
   const queryClient = useQueryClient();
@@ -182,22 +207,19 @@ export function WeightTable() {
   ];
 
   const table = useReactTable({
-    data,
+    data: data.entries,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    initialState: {
-      sorting: [
-        {
-          id: "date",
-          desc: true,
-        },
-      ],
-      pagination: {
-        pageSize: 5,
-      },
+    onPaginationChange: setPagination, //update the pagination state when internal APIs mutate the pagination state
+    pageCount: data.pages,
+    manualSorting: true,
+    manualPagination: true,
+    state: {
+      sorting,
+      pagination,
     },
+    onSortingChange: setSorting,
   });
 
   if (isLoading) {
@@ -213,7 +235,35 @@ export function WeightTable() {
   }
 
   return (
-    <div>
+    <div className="space-y-4">
+      {/* Entries per page selector */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-2">
+          <span className="text-sm text-muted-foreground">Show</span>
+          <Select
+            value={pagination.pageSize.toString()}
+            onValueChange={handlePageSizeChange}
+          >
+            <SelectTrigger className="w-20">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="5">5</SelectItem>
+              <SelectItem value="10">10</SelectItem>
+              <SelectItem value="25">25</SelectItem>
+              <SelectItem value="50">50</SelectItem>
+              <SelectItem value="100">100</SelectItem>
+            </SelectContent>
+          </Select>
+          <span className="text-sm text-muted-foreground">entries</span>
+        </div>
+
+        {/* {totalEntries > 0 && (
+          <div className="text-sm text-muted-foreground">
+            Showing {startEntry} to {endEntry} of {totalEntries} entries
+          </div>
+        )} */}
+      </div>{" "}
       <div className="rounded-md border">
         <Table>
           <TableHeader>

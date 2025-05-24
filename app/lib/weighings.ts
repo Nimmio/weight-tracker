@@ -13,6 +13,36 @@ export const fetchAllWeighings = createServerFn({ method: "GET" }).handler(
   }
 );
 
+const Sort = z.array(z.object({ id: z.string(), desc: z.boolean() })).min(1);
+const Pagination = z.object({
+  pageIndex: z.number().min(0),
+  pageSize: z.number(),
+});
+const FetchWeighingsForHistoryParams = z.object({
+  sort: Sort,
+  pagination: Pagination,
+});
+
+export const fetchWeighingsForHistory = createServerFn({ method: "GET" })
+  .validator((d: unknown) => FetchWeighingsForHistoryParams.parse(d))
+  .handler(async ({ data }) => {
+    const { sort: sorts, pagination } = data;
+
+    const pages = Math.ceil(
+      (await prisma.weighing.count({})) / pagination.pageSize
+    );
+    return {
+      entries: await prisma.weighing.findMany({
+        orderBy: [
+          ...sorts.map((sort) => ({ [sort.id]: sort.desc ? "desc" : "asc" })),
+        ],
+        skip: pagination.pageSize * pagination.pageIndex,
+        take: pagination.pageSize,
+      }),
+      pages,
+    };
+  });
+
 export const weighingsQueryOptions = () =>
   queryOptions({
     queryKey: ["weighings"],
