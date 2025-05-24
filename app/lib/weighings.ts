@@ -4,8 +4,10 @@ import { createServerFn } from "@tanstack/react-start";
 import { create } from "node:domain";
 import { z } from "zod";
 import prisma from "./prisma";
+import { Timeframe } from "@/components/chart/timeframeSelector/timeframeSelector";
+import { sub, subMonths, subYears } from "date-fns";
 
-export const fetchWeighings = createServerFn({ method: "GET" }).handler(
+export const fetchAllWeighings = createServerFn({ method: "GET" }).handler(
   async () => {
     return await prisma.weighing.findMany({ orderBy: { date: "asc" } });
   }
@@ -14,7 +16,31 @@ export const fetchWeighings = createServerFn({ method: "GET" }).handler(
 export const weighingsQueryOptions = () =>
   queryOptions({
     queryKey: ["weighings"],
-    queryFn: () => fetchWeighings(),
+    queryFn: () => fetchAllWeighings(),
+  });
+
+export const fetchWeighingsInTimeframe = createServerFn({ method: "GET" })
+  .validator((d: Timeframe) => d)
+  .handler(async ({ data }) => {
+    const timeframe = data;
+    if (timeframe === "all") return await fetchAllWeighings();
+    const durationInt = +timeframe.substring(0, 1);
+    const durationType = timeframe.substring(1, 2);
+    const endDate = new Date();
+    const startDate =
+      durationType === "m"
+        ? subMonths(endDate, durationInt)
+        : subYears(endDate, durationInt);
+
+    return await prisma.weighing.findMany({
+      orderBy: { date: "asc" },
+      where: {
+        date: {
+          gte: startDate,
+          lte: endDate,
+        },
+      },
+    });
   });
 
 export const fetchWeighing = createServerFn({ method: "GET" })

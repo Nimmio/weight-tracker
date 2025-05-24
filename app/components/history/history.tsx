@@ -33,7 +33,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useState } from "react";
-import { deleteWeighing, fetchWeighings } from "@/lib/weighings";
+import { deleteWeighing, fetchAllWeighings } from "@/lib/weighings";
 import { ReactNode } from "@tanstack/react-router";
 
 export function WeightTable() {
@@ -45,7 +45,7 @@ export function WeightTable() {
     isError,
   } = useQuery({
     queryKey: ["weighings"],
-    queryFn: fetchWeighings,
+    queryFn: fetchAllWeighings,
   });
 
   const queryClient = useQueryClient();

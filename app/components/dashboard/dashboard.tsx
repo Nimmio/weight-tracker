@@ -122,12 +122,13 @@ export function Dashboard({ activeTab }: DashboardProps) {
           </TabsTrigger>
         </TabsList>
         {activeTab === "overview" && (
-          <Card>
+          <Card className="pb-4">
             <CardHeader>
               <CardTitle>Weight Trend</CardTitle>
               <CardDescription>Your progress over time</CardDescription>
             </CardHeader>
-            <CardContent className="pt-6">{<Chart />}</CardContent>
+
+            <CardContent className="pt-6 pb-12">{<Chart />}</CardContent>
           </Card>
         )}
         {activeTab === "history" && (

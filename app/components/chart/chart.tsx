@@ -9,16 +9,24 @@ import {
 } from "recharts";
 import { format } from "date-fns";
 import { Card } from "@/components/ui/card";
-import { fetchWeighings } from "@/lib/weighings";
+import { fetchAllWeighings, fetchWeighingsInTimeframe } from "@/lib/weighings";
+import { Separator } from "../ui/separator";
+import {
+  Timeframe,
+  TimeframeSelector,
+} from "./timeframeSelector/timeframeSelector";
+import { useState } from "react";
 
 export function Chart() {
+  const [timeframe, setTimeframe] = useState<Timeframe>("all");
+
   const {
     data = [],
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["weighings"],
-    queryFn: fetchWeighings,
+    queryKey: ["weighings", { timeframe }],
+    queryFn: () => fetchWeighingsInTimeframe({ data: timeframe }),
   });
 
   if (isLoading) {
@@ -46,6 +54,10 @@ export function Chart() {
 
   return (
     <div className="w-full h-[300px]">
+      <TimeframeSelector
+        selectedTimeframe={timeframe}
+        onTimeframeChange={(newTimeframe) => setTimeframe(newTimeframe)}
+      />
       {chartData.length === 0 ? (
         <div className="flex items-center justify-center h-full border rounded-lg bg-muted/20">
           <p className="text-muted-foreground">
