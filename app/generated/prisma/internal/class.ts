@@ -31,7 +31,7 @@ const config: runtime.GetPrismaClientConfig = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "debian-openssl-3.0.x",
+        "value": "debian-openssl-1.1.x",
         "native": true
       },
       {
@@ -41,6 +41,10 @@ const config: runtime.GetPrismaClientConfig = {
       {
         "fromEnvVar": null,
         "value": "linux-musl-openssl-3.0.x"
+      },
+      {
+        "fromEnvVar": null,
+        "value": "debian-openssl-1.1.x"
       }
     ],
     "previewFeatures": [],
@@ -54,6 +58,7 @@ const config: runtime.GetPrismaClientConfig = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
@@ -62,8 +67,8 @@ const config: runtime.GetPrismaClientConfig = {
       }
     }
   },
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider      = \"prisma-client\"\n  output        = \"../app/generated/prisma\"\n  binaryTargets = [\"native\", \"debian-openssl-3.0.x\", \"linux-musl-openssl-3.0.x\"]\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel Weighing {\n  id        Int      @id @default(autoincrement())\n  createdAt DateTime @default(now()) @db.Timestamp(6)\n  date      DateTime @default(now()) @db.Timestamp(6)\n  weight    Int\n  notes     String?\n}\n\nmodel Goal {\n  id        Int      @id @default(autoincrement())\n  createdAt DateTime @default(now()) @db.Timestamp(6)\n  weight    Int\n}\n",
-  "inlineSchemaHash": "7413dfe038a45a688ed543acec3e61ecb5768c9376997099bc07d94f85977cb1",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider      = \"prisma-client\"\n  output        = \"../app/generated/prisma\"\n  binaryTargets = [\"native\", \"debian-openssl-3.0.x\", \"linux-musl-openssl-3.0.x\", \"debian-openssl-1.1.x\"]\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel Weighing {\n  id        Int      @id @default(autoincrement())\n  createdAt DateTime @default(now()) @db.Timestamp(6)\n  date      DateTime @default(now()) @db.Timestamp(6)\n  weight    Int\n  notes     String?\n}\n\nmodel Goal {\n  id        Int      @id @default(autoincrement())\n  createdAt DateTime @default(now()) @db.Timestamp(6)\n  weight    Int\n}\n",
+  "inlineSchemaHash": "a4cd813737dfa55ad02df2934c26a42b8b313d91fb0cc0ca3d0f650189f4763b",
   "copyEngine": true,
   "runtimeDataModel": {
     "models": {},

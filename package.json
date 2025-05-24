@@ -11,6 +11,9 @@
     "ts": "tsc --noEmit --incremental",
     "db:deploy": "pnpx prisma migrate deploy && pnpx prisma generate"
   },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -52,6 +55,7 @@
     "@types/react-dom": "^19.1.5",
     "@vitejs/plugin-react": "^4.4.1",
     "prisma": "^6.8.2",
+    "tsx": "^4.19.4",
     "typescript": "^5.8.3",
     "vite-tsconfig-paths": "^5.1.4"
   }
