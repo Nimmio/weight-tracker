@@ -217,7 +217,7 @@ export type WeighingWhereInput = {
   id?: Prisma.IntFilter<"Weighing"> | number
   createdAt?: Prisma.DateTimeFilter<"Weighing"> | Date | string
   date?: Prisma.DateTimeFilter<"Weighing"> | Date | string
-  weight?: Prisma.IntFilter<"Weighing"> | number
+  weight?: Prisma.FloatFilter<"Weighing"> | number
   notes?: Prisma.StringNullableFilter<"Weighing"> | string | null
 }
 
@@ -236,7 +236,7 @@ export type WeighingWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.WeighingWhereInput | Prisma.WeighingWhereInput[]
   createdAt?: Prisma.DateTimeFilter<"Weighing"> | Date | string
   date?: Prisma.DateTimeFilter<"Weighing"> | Date | string
-  weight?: Prisma.IntFilter<"Weighing"> | number
+  weight?: Prisma.FloatFilter<"Weighing"> | number
   notes?: Prisma.StringNullableFilter<"Weighing"> | string | null
 }, "id">
 
@@ -260,7 +260,7 @@ export type WeighingScalarWhereWithAggregatesInput = {
   id?: Prisma.IntWithAggregatesFilter<"Weighing"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Weighing"> | Date | string
   date?: Prisma.DateTimeWithAggregatesFilter<"Weighing"> | Date | string
-  weight?: Prisma.IntWithAggregatesFilter<"Weighing"> | number
+  weight?: Prisma.FloatWithAggregatesFilter<"Weighing"> | number
   notes?: Prisma.StringNullableWithAggregatesFilter<"Weighing"> | string | null
 }
 
@@ -282,7 +282,7 @@ export type WeighingUncheckedCreateInput = {
 export type WeighingUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  weight?: Prisma.IntFieldUpdateOperationsInput | number
+  weight?: Prisma.FloatFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -290,7 +290,7 @@ export type WeighingUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  weight?: Prisma.IntFieldUpdateOperationsInput | number
+  weight?: Prisma.FloatFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -305,7 +305,7 @@ export type WeighingCreateManyInput = {
 export type WeighingUpdateManyMutationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  weight?: Prisma.IntFieldUpdateOperationsInput | number
+  weight?: Prisma.FloatFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -313,7 +313,7 @@ export type WeighingUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  weight?: Prisma.IntFieldUpdateOperationsInput | number
+  weight?: Prisma.FloatFieldUpdateOperationsInput | number
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -355,7 +355,7 @@ export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
 }
 
-export type IntFieldUpdateOperationsInput = {
+export type FloatFieldUpdateOperationsInput = {
   set?: number
   increment?: number
   decrement?: number
@@ -365,6 +365,14 @@ export type IntFieldUpdateOperationsInput = {
 
 export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
+}
+
+export type IntFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
 }
 
 
@@ -838,7 +846,7 @@ export interface WeighingFieldRefs {
   readonly id: Prisma.FieldRef<"Weighing", 'Int'>
   readonly createdAt: Prisma.FieldRef<"Weighing", 'DateTime'>
   readonly date: Prisma.FieldRef<"Weighing", 'DateTime'>
-  readonly weight: Prisma.FieldRef<"Weighing", 'Int'>
+  readonly weight: Prisma.FieldRef<"Weighing", 'Float'>
   readonly notes: Prisma.FieldRef<"Weighing", 'String'>
 }
     

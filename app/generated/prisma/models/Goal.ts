@@ -202,7 +202,7 @@ export type GoalWhereInput = {
   NOT?: Prisma.GoalWhereInput | Prisma.GoalWhereInput[]
   id?: Prisma.IntFilter<"Goal"> | number
   createdAt?: Prisma.DateTimeFilter<"Goal"> | Date | string
-  weight?: Prisma.IntFilter<"Goal"> | number
+  weight?: Prisma.FloatFilter<"Goal"> | number
 }
 
 export type GoalOrderByWithRelationInput = {
@@ -217,7 +217,7 @@ export type GoalWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.GoalWhereInput[]
   NOT?: Prisma.GoalWhereInput | Prisma.GoalWhereInput[]
   createdAt?: Prisma.DateTimeFilter<"Goal"> | Date | string
-  weight?: Prisma.IntFilter<"Goal"> | number
+  weight?: Prisma.FloatFilter<"Goal"> | number
 }, "id">
 
 export type GoalOrderByWithAggregationInput = {
@@ -237,7 +237,7 @@ export type GoalScalarWhereWithAggregatesInput = {
   NOT?: Prisma.GoalScalarWhereWithAggregatesInput | Prisma.GoalScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Goal"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Goal"> | Date | string
-  weight?: Prisma.IntWithAggregatesFilter<"Goal"> | number
+  weight?: Prisma.FloatWithAggregatesFilter<"Goal"> | number
 }
 
 export type GoalCreateInput = {
@@ -253,13 +253,13 @@ export type GoalUncheckedCreateInput = {
 
 export type GoalUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  weight?: Prisma.IntFieldUpdateOperationsInput | number
+  weight?: Prisma.FloatFieldUpdateOperationsInput | number
 }
 
 export type GoalUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  weight?: Prisma.IntFieldUpdateOperationsInput | number
+  weight?: Prisma.FloatFieldUpdateOperationsInput | number
 }
 
 export type GoalCreateManyInput = {
@@ -270,13 +270,13 @@ export type GoalCreateManyInput = {
 
 export type GoalUpdateManyMutationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  weight?: Prisma.IntFieldUpdateOperationsInput | number
+  weight?: Prisma.FloatFieldUpdateOperationsInput | number
 }
 
 export type GoalUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  weight?: Prisma.IntFieldUpdateOperationsInput | number
+  weight?: Prisma.FloatFieldUpdateOperationsInput | number
 }
 
 export type GoalCountOrderByAggregateInput = {
@@ -767,7 +767,7 @@ export interface Prisma__GoalClient<T, Null = never, ExtArgs extends runtime.Typ
 export interface GoalFieldRefs {
   readonly id: Prisma.FieldRef<"Goal", 'Int'>
   readonly createdAt: Prisma.FieldRef<"Goal", 'DateTime'>
-  readonly weight: Prisma.FieldRef<"Goal", 'Int'>
+  readonly weight: Prisma.FieldRef<"Goal", 'Float'>
 }
     
 

@@ -1,4 +1,4 @@
-import { PrismaClient } from "@/generated/prisma";
+import Decimal from "decimal.js";
 import { queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import { create } from "node:domain";
@@ -6,6 +6,7 @@ import { z } from "zod";
 import prisma from "./prisma";
 import { Timeframe } from "@/components/chart/timeframeSelector/timeframeSelector";
 import { sub, subMonths, subYears } from "date-fns";
+import { roundNumber } from "./utils";
 
 export const fetchAllWeighings = createServerFn({ method: "GET" }).handler(
   async () => {
@@ -104,7 +105,7 @@ const fetchCurrentWeightChange = createServerFn({ method: "GET" }).handler(
       take: 2,
     });
     if (weighings.length <= 1) return 0;
-    const diffenrenz = weighings[0].weight - weighings[1].weight;
+    const diffenrenz = roundNumber(weighings[0].weight - weighings[1].weight);
     return diffenrenz >= 0 ? `+${diffenrenz}` : diffenrenz.toString();
   }
 );
@@ -125,7 +126,7 @@ export const fetchDashboardData = createServerFn({ method: "GET" }).handler(
         fetchCurrentWeightChange(),
         (await fetchStartingWeight())?.weight || 0,
       ]);
-    const startingWeightChange = currentWeight - startingWeight;
+    const startingWeightChange = roundNumber(currentWeight - startingWeight);
 
     return {
       currentWeight,
@@ -179,7 +180,7 @@ export const fetchGoalData = createServerFn({ method: "GET" }).handler(
       (await fetchGoalWeight())?.weight || 0,
       (await fetchCurrentWeight())?.weight || 0,
     ]);
-    const toGo = currentWeight - goalWeight;
+    const toGo = roundNumber(currentWeight - goalWeight);
     return {
       goalWeight,
       toGo,
