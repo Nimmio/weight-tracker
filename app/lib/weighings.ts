@@ -140,7 +140,7 @@ export const fetchDashboardData = createServerFn({ method: "GET" }).handler(
   }
 );
 
-const Weighing = z.object({
+const CreateWeighing = z.object({
   weight: z.number().gt(0),
   date: z.date(),
   notes: z.string().optional(),
@@ -148,7 +148,7 @@ const Weighing = z.object({
 
 export const addWeighing = createServerFn({ method: "POST" })
   .validator((weighing: unknown) => {
-    return Weighing.parse(weighing);
+    return CreateWeighing.parse(weighing);
   })
   .handler(async (ctx) => {
     return await prisma.weighing.create({
@@ -173,6 +173,63 @@ export const deleteWeighing = createServerFn({ method: "POST" })
 const fetchGoalWeight = createServerFn({ method: "GET" }).handler(async () => {
   return await prisma.goal.findFirst();
 });
+
+const EditWeighingNote = z.object({
+  id: z.number(),
+  notes: z.string().optional(),
+});
+
+export const editWeighingNote = createServerFn({ method: "POST" })
+  .validator((weighing: unknown) => {
+    return EditWeighingNote.parse(weighing);
+  })
+  .handler(async (ctx) => {
+    const { id, notes = "" } = ctx.data;
+    return await prisma.weighing.update({
+      where: { id: id },
+      data: {
+        notes: notes || "",
+      },
+    });
+  });
+
+const EditWeighingDate = z.object({
+  id: z.number(),
+  date: z.date(),
+});
+
+export const editWeighingDate = createServerFn({ method: "POST" })
+  .validator((weighing: unknown) => {
+    return EditWeighingDate.parse(weighing);
+  })
+  .handler(async (ctx) => {
+    const { id, date } = ctx.data;
+    return await prisma.weighing.update({
+      where: { id: id },
+      data: {
+        date: date,
+      },
+    });
+  });
+
+const EditWeighingWeight = z.object({
+  id: z.number(),
+  weight: z.number().gt(0),
+});
+
+export const editWeighingWeight = createServerFn({ method: "POST" })
+  .validator((weighing: unknown) => {
+    return EditWeighingWeight.parse(weighing);
+  })
+  .handler(async (ctx) => {
+    const { id, weight } = ctx.data;
+    return await prisma.weighing.update({
+      where: { id: id },
+      data: {
+        weight: weight,
+      },
+    });
+  });
 
 export const fetchGoalData = createServerFn({ method: "GET" }).handler(
   async () => {

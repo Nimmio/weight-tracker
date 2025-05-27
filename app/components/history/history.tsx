@@ -9,7 +9,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { format } from "date-fns";
-import { ArrowDown, ArrowUp, ArrowUpDown, Trash2 } from "lucide-react";
+import { ArrowDown, ArrowUp, ArrowUpDown, Edit, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -33,7 +33,14 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useState } from "react";
-import { deleteWeighing, fetchWeighingsForHistory } from "@/lib/weighings";
+import {
+  deleteWeighing,
+  editDateMutation,
+  editWeighingDate,
+  editWeighingNote,
+  editWeighingWeight,
+  fetchWeighingsForHistory,
+} from "@/lib/weighings";
 import { ReactNode } from "@tanstack/react-router";
 import {
   Select,
@@ -42,6 +49,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import EditableCell from "./editableCell/editableCell";
 
 export function WeightTable() {
   const [entryToDelete, setEntryToDelete] = useState(null);
@@ -86,8 +94,68 @@ export function WeightTable() {
     },
   });
 
+  const editNoteMutation = useMutation({
+    mutationFn: editWeighingNote,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["weighings"] });
+      queryClient.invalidateQueries({
+        queryKey: ["weighing"],
+      });
+    },
+  });
+
+  const editDateMutation = useMutation({
+    mutationFn: editWeighingDate,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["weighings"] });
+      queryClient.invalidateQueries({
+        queryKey: ["weighing"],
+      });
+    },
+  });
+
+  const editWeightMutation = useMutation({
+    mutationFn: editWeighingWeight,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["weighings"] });
+      queryClient.invalidateQueries({
+        queryKey: ["weighing"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["goalWeight"],
+      });
+    },
+  });
+
   const handleDelete = (id) => {
     deleteMutation.mutate({ data: { id } });
+  };
+
+  interface handleEditNoteParams {
+    id: number;
+    notes?: string;
+  }
+
+  const handleEditNote = ({ id, notes = "" }: handleEditNoteParams) => {
+    editNoteMutation.mutate({ data: { id, notes } });
+  };
+
+  interface handleEditDateParams {
+    id: number;
+    date: Date;
+  }
+
+  const handleEditDate = ({ id, date }: handleEditDateParams) => {
+    editDateMutation.mutate({ data: { id, date } });
+  };
+
+  interface handleEditWeightParams {
+    id: number;
+    weight: number;
+  }
+
+  const handleEditWeight = ({ id, weight }: handleEditWeightParams) => {
+    editWeightMutation.mutate({ data: { id, weight } });
   };
 
   const columns = [
@@ -106,7 +174,19 @@ export function WeightTable() {
       },
       cell: ({ row }) => {
         const date = new Date(row.getValue("date"));
-        return <div>{format(date, "MMM d, yyyy")}</div>;
+        const { id } = row.original;
+
+        return (
+          <EditableCell
+            value={date}
+            type="date"
+            onSave={(newValue) => {
+              handleEditDate({ id, date: newValue as Date });
+            }}
+          >
+            <>{format(date, "MMM d, yyyy")}</>
+          </EditableCell>
+        );
       },
     },
     {
@@ -124,8 +204,8 @@ export function WeightTable() {
       },
       cell: ({ row, table }) => {
         const weight = Number.parseFloat(row.getValue("weight"));
+        const { id } = row.original;
 
-        // Calculate change from previous entry
         const rowIndex = row.index;
         let changeIcon: ReactNode | null = null;
         let changeClass = "";
@@ -146,10 +226,18 @@ export function WeightTable() {
         }
 
         return (
-          <div className="flex items-center">
-            <span className={changeClass}>{weight.toFixed(1)}</span>
-            {changeIcon}
-          </div>
+          <EditableCell
+            value={weight.toFixed(1)}
+            type="number"
+            onSave={(newValue) =>
+              handleEditWeight({ id, weight: newValue as number })
+            }
+          >
+            <div className="flex items-center">
+              <span className={changeClass}>{weight.toFixed(1)}</span>
+              {changeIcon}
+            </div>{" "}
+          </EditableCell>
         );
       },
     },
@@ -158,7 +246,19 @@ export function WeightTable() {
       header: "Notes",
       cell: ({ row }) => {
         const notes = row.getValue("notes");
-        return <div className="max-w-[200px] truncate">{notes || "-"}</div>;
+        const { id } = row.original;
+
+        return (
+          <EditableCell
+            value={notes}
+            type="string"
+            onSave={(newValue) => {
+              handleEditNote({ id, notes: newValue as string });
+            }}
+          >
+            <div className="max-w-[200px] truncate">{notes || "-"}</div>
+          </EditableCell>
+        );
       },
     },
     {
